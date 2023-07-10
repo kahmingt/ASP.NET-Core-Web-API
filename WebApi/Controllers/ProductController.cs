@@ -4,8 +4,9 @@ using WebApi.Services;
 
 namespace WebApi.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [ApiController]
-    [Route("api/[Controller]")]
+    [Route("api/[controller]")]
     public class ProductController : ControllerBase
     {
         private readonly IRepositoryWrapper _db;
@@ -16,7 +17,6 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("/ProductList")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<ProductListing>>> GetProductList()
@@ -26,40 +26,42 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        [Route("{ProductId}")]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> GetProductDetailsById(int ProductId)
+        public async Task<ActionResult> GetProductDetailsById(int id)
         {
-            var model = await _db.ProductService.GetProductDetailsById(ProductId);
+            var model = await _db.ProductService.GetProductDetailsById(id);
             return model == null ? NotFound("Invalid") : Ok(model);
         }
 
         [HttpDelete]
-        [Route("{ProductId}")]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> DeleteProductDetailsById(int ProductId)
+        public async Task<ActionResult> DeleteProductDetailsById(int id)
         {
-            var model = await _db.ProductService.DeleteProductById(ProductId);
+            var model = await _db.ProductService.DeleteProductById(id);
             return model == false ? BadRequest("Invalid") : Ok();
         }
 
         [HttpPut]
-        [Route("{ProductId}")]
+        [Route("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> UpdateProductDetailsById(int ProductId, ProductDetails productDetails)
+        public async Task<ActionResult> UpdateProductDetailsById(int id, ProductDetails productDetails)
         {
-            if (!ModelState.IsValid || ProductId != productDetails.ProductID)
+            if (!ModelState.IsValid || id != productDetails.ProductID)
             {
                 return BadRequest("Invalid");
             }
-            var model = await _db.ProductService.UpdateProductDetailsById(ProductId, productDetails);
+            var model = await _db.ProductService.UpdateProductDetailsById(id, productDetails);
             return model == null ? BadRequest("Invalid") : Ok(model);
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateProduct([FromBody] ProductDetails productDetails)
         {
             if (!(ModelState.IsValid))
