@@ -1,16 +1,27 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using WebApi.Data;
 using WebApi.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 #region --- SQL Connection ---
+var sqlConnectionStringBuilder = new SqlConnectionStringBuilder(
+        builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")
+);
+sqlConnectionStringBuilder.UserID = builder.Configuration["Database:User"];
+sqlConnectionStringBuilder.Password = builder.Configuration["Database:Password"];
+
 builder.Services
     .AddDbContext<ApplicationDbContext>(options =>
     {
-        options.UseSqlServer(connectionString,
+        options.UseSqlServer(sqlConnectionStringBuilder.ConnectionString,
             opt => opt.EnableRetryOnFailure(
                 maxRetryCount: 5,
                 maxRetryDelay: System.TimeSpan.FromSeconds(30),
@@ -18,6 +29,71 @@ builder.Services
         );
     });
 #endregion
+
+#region --- Identity ---
+builder.Services
+    .AddDefaultIdentity<IdentityUser>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = true;
+    })
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.
+    Configure<IdentityOptions>(options =>
+    {
+        // Password settings
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequireUppercase = true;
+        options.Password.RequiredLength = 6;
+        options.Password.RequiredUniqueChars = 1;
+
+        // Lockout settings
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        options.Lockout.MaxFailedAccessAttempts = 5;
+        options.Lockout.AllowedForNewUsers = true;
+
+        // User settings
+        options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        options.User.RequireUniqueEmail = false;
+    });
+#endregion
+
+#region --- Authentication ---
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+
+    #region --- JWT Token ---
+    .AddJwtBearer("DefaultJWT", options =>
+    {
+        options.SaveToken = true;
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateAudience = true,
+            ValidateIssuer = true,
+            ValidAudience = builder.Configuration["JWT:ValidAudience"],
+            ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                builder.Configuration["JWT:Secret"]
+            ))
+        };
+    });
+    #endregion
+
+#endregion
+
+
 
 // Add services to the container.
 builder.Services.AddTransient<IRepositoryWrapper, RepositoryWrapper>();
@@ -37,6 +113,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseHttpsRedirection();
 
