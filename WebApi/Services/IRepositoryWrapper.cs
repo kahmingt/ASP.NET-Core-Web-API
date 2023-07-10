@@ -2,6 +2,6 @@
 {
     public interface IRepositoryWrapper
     {
-        IOrderService OrderService { get; }
+        IProductService ProductService { get; }
     }
 }
