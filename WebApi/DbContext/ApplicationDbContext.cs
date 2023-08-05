@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using WebApi.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using WebApi.Database.Entities;
 
-namespace WebApi.Data
+namespace WebApi.Database
 {
     public partial class ApplicationDbContext : IdentityDbContext
     {
