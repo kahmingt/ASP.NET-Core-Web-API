@@ -1,7 +1,13 @@
-﻿namespace WebApi.Services
+﻿namespace WebApi.Repository
 {
     public interface IRepositoryWrapper
     {
-        IProductService ProductService { get; }
+        /// <summary>
+        /// Northwind.Products database handler.
+        /// </summary>
+        IProductRepository ProductRepository { get; }
+
+        Task CommitChangesAsync();
+
     }
 }

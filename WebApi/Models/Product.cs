@@ -4,12 +4,11 @@ namespace WebApi.Models
 {
     public class ProductListing
     {
-        public int CategoryID { get; set; }
         public string CategoryName { get; set; }
         public int ProductID { get; set; }
         public string ProductName { get; set; }
         public decimal UnitPrice { get; set; }
-        public short UnitInStock { get; set; }
+        public short UnitsInStock { get; set; }
     }
 
     public class ProductDetails
@@ -33,8 +32,8 @@ namespace WebApi.Models
         public string SupplierName { get; set; }
 
         [Required]
-        [Display(Name = "Unit In Stock")]
-        public short UnitInStock { get; set; }
+        [Display(Name = "Units In Stock")]
+        public short UnitsInStock { get; set; }
 
         [Required]
         [Display(Name = "Unit Price")]

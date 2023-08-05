@@ -5,11 +5,16 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using WebApi.Data;
-using WebApi.Services;
-
+using WebApi.Database;
+using WebApi.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Read external json file
+builder.Configuration.AddJsonFile(
+        Path.GetFullPath(Path.Combine(@"../secrets.json")),
+        optional: false,
+        reloadOnChange: true);
 
 #region --- SQL Connection ---
 var sqlConnectionStringBuilder = new SqlConnectionStringBuilder(
@@ -30,15 +35,15 @@ builder.Services
     });
 #endregion
 
-#region --- Identity ---
+#region --- ASP.NET Identity ---
 builder.Services
-    .AddDefaultIdentity<IdentityUser>(options =>
+    .AddIdentity<IdentityUser, IdentityRole>(options =>
     {
         options.SignIn.RequireConfirmedAccount = true;
     })
-    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()         // To supports MFA TOTP (Time-based One-time Password)
+    .AddDefaultUI();
 
 builder.Services.
     Configure<IdentityOptions>(options =>
@@ -89,14 +94,18 @@ builder.Services
             ))
         };
     });
-    #endregion
+#endregion
 
 #endregion
 
 
-
-// Add services to the container.
+#region --- Service Extensions ---
+// Repository Wrapper
 builder.Services.AddTransient<IRepositoryWrapper, RepositoryWrapper>();
+
+//AutoMapper.Extensions.Microsoft.DependencyInjection
+builder.Services.AddAutoMapper(typeof(Program));
+#endregion
 
 
 builder.Services.AddControllers();
