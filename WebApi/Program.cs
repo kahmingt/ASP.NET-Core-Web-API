@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using WebApi.Area.Account.Utility;
 using WebApi.Shared.Database;
 using WebApi.Shared.Repository;
+using WebApi.Shared.Service.Email;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -105,6 +107,12 @@ builder.Services
 #region --- Services ---
 // Repository Wrapper
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+// JWT Authentication
+builder.Services.AddTransient<ITokenManager, TokenManager>();
+
+// Email SMTP service
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 //AutoMapper.Extensions.Microsoft.DependencyInjection
 builder.Services.AddAutoMapper(typeof(Program));
