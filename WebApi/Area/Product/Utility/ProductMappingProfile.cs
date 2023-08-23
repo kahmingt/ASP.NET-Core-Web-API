@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using WebApi.Shared.Database.Entity;
 using WebApi.Area.Product.Model;
+using WebApi.Shared.Utility;
 
 namespace WebApi.Area.Product.Utility;
 
@@ -12,9 +13,6 @@ public class MappingProfile : Profile
         CreateMap<Products, ProductListRetrieveModel>()
             .ForMember(dest => dest.CategoryName, opts => opts.MapFrom(src => src.Category.CategoryName));
 
-        //CreateMap<PagedList<Products>, PagedList<ProductListing>>()
-        //    .ConvertUsing<PagedListConverter<Products, ProductListing>>();
-
         // Database.Products -> Model.Retrieve.ProductDetail
         CreateMap<Products, ProductDetailRetrieveModel>()
             .ForMember(dest => dest.CategoryName, opts => opts.MapFrom(src => src.Category.CategoryName))
@@ -25,7 +23,6 @@ public class MappingProfile : Profile
 
         // Model.Create.Product.Detail -> Database.Products
         CreateMap<ProductDetailCreateModel, Products>();
-
-
     }
+
 }

@@ -7,7 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using WebApi.Area.Account.Utility;
+using WebApi.Area.Product.Utility;
 using WebApi.Shared.Database;
+using WebApi.Shared.Database.Entity;
 using WebApi.Shared.Repository;
 using WebApi.Shared.Service.Email;
 
@@ -116,6 +118,9 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 
 //AutoMapper.Extensions.Microsoft.DependencyInjection
 builder.Services.AddAutoMapper(typeof(Program));
+
+// Operation helper
+builder.Services.AddTransient<OperationHelper<Products>>();
 #endregion
 
 

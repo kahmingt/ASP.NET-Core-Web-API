@@ -29,14 +29,14 @@
         public int PageNumber { get; set; } = 1;
 
         /// <summary>
-        /// Search criteria.
+        /// Filter criteria.
         /// </summary>
-        public string? Search { get; set; }
-
+        public string? FilterBy { get; set; }
 
         /// <summary>
         /// Order criteria
         /// </summary>
         public string? OrderBy { get; set; }
+
     }
 }

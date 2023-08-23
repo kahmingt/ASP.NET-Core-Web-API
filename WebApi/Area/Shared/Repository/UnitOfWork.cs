@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApi.Area.Product.Repository;
 using WebApi.Shared.Database;
+using WebApi.Shared.Database.Entity;
+using WebApi.Area.Product.Utility;
 
 namespace WebApi.Shared.Repository
 {
@@ -8,17 +10,21 @@ namespace WebApi.Shared.Repository
     {
         private readonly ApplicationDbContext _db;
         private IProductRepository _productRepository;
+        private OperationHelper<Products> _operationHelper;
 
-        public UnitOfWork(ApplicationDbContext db)
+        public UnitOfWork(
+            ApplicationDbContext db,
+            OperationHelper<Products> operationHelper)
         {
             _db = db;
+            _operationHelper = operationHelper;
         }
 
         public IProductRepository ProductRepository
         {
             get
             {
-                _productRepository ??= new ProductRepository(_db);
+                _productRepository ??= new ProductRepository(_db, _operationHelper);
                 return _productRepository;
             }
         }
@@ -45,4 +51,3 @@ namespace WebApi.Shared.Repository
     }
 
 }
-

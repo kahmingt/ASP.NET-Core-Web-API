@@ -9,7 +9,7 @@ using WebApi.Shared.Repository;
 
 namespace WebApi.Area.Product.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProductController : ControllerBase
@@ -138,6 +138,7 @@ namespace WebApi.Area.Product.Controllers
                 }
                 else
                 {
+                    Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(modelDB.GetPagingMetadata));
                     var modelDTO = _mapper.Map<List<Products>, List<ProductListRetrieveModel>>(modelDB);
                     return Ok(modelDTO);
                 }

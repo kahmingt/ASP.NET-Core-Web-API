@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using System.Text;
 using WebApi.Area.Product.Utility;
 using WebApi.Shared.Database;
 using WebApi.Shared.Database.Entity;
@@ -45,17 +42,24 @@ namespace WebApi.Area.Product.Repository
             return model!;
         }
 
-        public async Task<List<Products>> GetProductListAsync(ProductQueryableParameter parameter)
+        public async Task<PagedList<Products>> GetProductListAsync(ProductQueryableParameter parameter)
         {
             var model = (IQueryable<Products>)GetAll(x => !x.IsDeleted).Include(x => x.Category);
-            return model!;
+
+            // Sorting & Filtering
+            model = _operationHelper.RunAll(model, parameter);
+
+            return PagedList<Products>.ToPagedList(
+                            model,
+                            parameter.PageNumber,
+                            parameter.PageSize);
         }
 
         public async Task UpdateProductDetailsByIdAsync(Products products)
         {
             _db.Entry(products).Property(x => x.ProductId).IsModified = false;
-
             Update(products);
         }
+
     }
 }

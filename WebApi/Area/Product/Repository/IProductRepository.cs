@@ -25,7 +25,7 @@ namespace WebApi.Area.Product.Repository
         /// <summary>
         /// Get entire product list.
         /// </summary>
-        Task<List<Products>> GetProductListAsync(ProductQueryableParameter parameter);
+        Task<PagedList<Products>> GetProductListAsync(ProductQueryableParameter parameter);
 
         /// <summary>
         /// Update product details by id.
