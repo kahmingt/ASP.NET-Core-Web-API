@@ -9,7 +9,7 @@ using WebApi.Shared.Repository;
 
 namespace WebApi.Area.Product.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ProductController : ControllerBase

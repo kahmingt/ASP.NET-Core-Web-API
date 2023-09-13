@@ -1,0 +1,78 @@
+## Test API functionality using REST Client by Huachao Mao in Visual Studio Code
+## https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+## Setup
+@localhost = localhost:7255
+
+
+### Create Product
+# POST /api/product HTTP/1.1
+# content-type: application/json
+# Authorization: XXXX
+#
+# {
+#   "categoryID": int,
+#   "productName": string,
+#   "supplierID": int,
+#   "unitsInStock": int,
+#   "unitPrice": float
+# }
+POST https://{{localhost}}/api/product HTTP/1.1
+content-type: application/json
+Authorization: XXXX
+
+{
+  "categoryID": int,
+  "productName": string,
+  "supplierID": int,
+  "unitsInStock": int,
+  "unitPrice": float
+}
+
+
+
+### Delete Product Details By Id
+# DELETE /api/product/{id} HTTP/1.1
+# Authorization: XXXX
+DELETE https://{{localhost}}/api/product/{id} HTTP/1.1
+Authorization: XXXX
+
+
+
+### Get Product Details By Id
+# GET /api/product/{id} HTTP/1.1
+# Authorization: XXXX
+GET https://{{localhost}}/api/product/1 HTTP/1.1
+#Authorization: XXXX
+
+
+
+### Get Product List
+# GET /api/product/ HTTP/1.1
+# Authorization: XXXX
+GET https://{{localhost}}/api/product/ HTTP/1.1
+
+
+
+
+### Update Product Details By Id
+# PUT /api/product/{id} HTTP/1.1
+# Authorization: XXXX
+#
+# {
+#   "categoryID": int,
+#   "productName": string,
+#   "supplierID": int,
+#   "unitsInStock": int,
+#   "unitPrice": float
+# }
+PUT https://{{localhost}}/api/product/{id} HTTP/1.1
+Authorization: XXXX
+
+{
+  "categoryID": int,
+  "productName": string,
+  "supplierID": int,
+  "unitsInStock": int,
+  "unitPrice": float
+}

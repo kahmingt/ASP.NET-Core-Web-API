@@ -16,11 +16,6 @@ using WebApi.Shared.Service.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Read external json file
-builder.Configuration.AddJsonFile(
-        Path.GetFullPath(Path.Combine(@"../secrets.json")),
-        optional: false,
-        reloadOnChange: true);
 
 #region --- SQL Connection ---
 var sqlConnectionStringBuilder = new SqlConnectionStringBuilder(
@@ -163,7 +158,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 #endregion
-
 
 
 var app = builder.Build();

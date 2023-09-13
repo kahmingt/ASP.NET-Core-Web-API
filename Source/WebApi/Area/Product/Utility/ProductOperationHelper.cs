@@ -71,3 +71,12 @@ namespace WebApi.Area.Product.Utility
 
     }
 }
+
+
+public static class temp
+{
+    public static IEnumerable<TSource> WhereIf<TSource>(this IEnumerable<TSource> source, bool condition, Func<TSource, bool> predicate)
+    {
+        return condition ? source.Where(predicate) : source;
+    }
+}
