@@ -1,0 +1,33 @@
+version: '3.4'
+
+name: aspnet-core-webapi
+services:
+  webapi:
+    container_name: webapi
+    image: ${DOCKER_REGISTRY-}webapi
+    build:
+      context: .
+      dockerfile: Source/WebApi/Dockerfile
+    environment:
+        - DOTNET_USE_POLLING_FILE_WATCHER=1
+        - ENABLE_CORS=true
+        - NUGET_PACKAGES=/root/.nuget/fallbackpackages
+        - NUGET_FALLBACK_PACKAGES=/root/.nuget/fallbackpackages
+    volumes:
+        - ${USERPROFILE}\vsdbg\vs2017u5:/remote_debugger:rw
+        - C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Sdks\Microsoft.Docker.Sdk\tools\TokenService.Proxy\linux-x64\net6.0:/TokenService.Proxy:ro
+        - ${USERPROFILE}\.nuget\packages\:/root/.nuget/fallbackpackages
+
+  mssql:
+    container_name: mssql
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    volumes:
+      - sqlvolume:/var/opt/mssql
+    environment:
+      - "ACCEPT_EULA=Y"
+      - "SA_PASSWORD=${MSSQL_SA_PASSWORD}"
+      - attach_dbs=[{"dbName":"${MSSQL_DB_NAME}","dbFiles":["${MSSQL_DATA_PATH}\\${MSSQL_DB_NAME}.mdf","${MSSQL_DATA_PATH}\\${MSSQL_DB_NAME}.ldf"]}]
+
+volumes:
+    sqlvolume:
+        external: false

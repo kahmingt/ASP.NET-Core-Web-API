@@ -1,0 +1,19 @@
+#-------------------------------------------------------------------------
+# Build & Run
+#-------------------------------------------------------------------------
+cd
+dotnet clean ASP.NET-Core-Web-API.sln --verbosity q; dotnet build ASP.NET-Core-Web-API.sln --verbosity q
+docker system prune -a
+docker builder prune --all --force
+docker-compose up --build --force-recreate
+
+https://localhost:51199/swagger/index.html
+
+POST    /api/account/login
+POST    /api/account/register
+POST    /api/account/logout
+POST    /api/product
+GET     /api/product
+DELETE  /api/product/{id}
+GET     /api/product/{id}
+PUT     /api/product/{id}
