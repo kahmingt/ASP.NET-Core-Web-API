@@ -156,11 +156,21 @@ builder.Services.AddSwaggerGen(options =>
             new List<string>()
         }
     });
-    //var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    //var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    //options.IncludeXmlComments(xmlPath);
 });
 #endregion
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("WebApiCorsPolicy",
+        policy =>
+        {
+            policy.AllowAnyHeader();
+            policy.AllowAnyMethod();
+            policy.WithOrigins("*");
+        });
+});
+
 
 
 var app = builder.Build();
@@ -176,6 +186,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseHttpsRedirection();
+app.UseCors("WebApiCorsPolicy");
 
 app.MapControllers();
 

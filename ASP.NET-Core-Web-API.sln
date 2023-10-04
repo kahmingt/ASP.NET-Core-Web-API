@@ -16,6 +16,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "Source\WebApi\Web
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{33EB4D44-F912-4BC1-AA1D-5E6EB881068F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTesting", "UnitTesting", "{F7840DDE-ECDF-451D-80CA-D85BA07137DC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RestClient", "RestClient", "{B768045B-6C32-4095-87C0-0D5FB6EFB731}"
+	ProjectSection(SolutionItems) = preProject
+		Source\UnitTesting\Rest-Client\ProductTest.http = Source\UnitTesting\Rest-Client\ProductTest.http
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Postman", "Postman", "{700DF191-7CBF-4401-86FF-A083C0540E54}"
+	ProjectSection(SolutionItems) = preProject
+		Source\UnitTesting\Postman\Asp-Net-Core-Web-Api.postman_collection.json = Source\UnitTesting\Postman\Asp-Net-Core-Web-Api.postman_collection.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +48,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{84134C26-A0F0-4C85-8E3F-E06929491A9D} = {9DCC39A1-3725-482D-8972-A655E6EA8E65}
+		{B768045B-6C32-4095-87C0-0D5FB6EFB731} = {F7840DDE-ECDF-451D-80CA-D85BA07137DC}
+		{700DF191-7CBF-4401-86FF-A083C0540E54} = {F7840DDE-ECDF-451D-80CA-D85BA07137DC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08AAF926-E9C6-46BA-80AF-36BFC9A325A8}

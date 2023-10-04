@@ -1,0 +1,369 @@
+{
+	"info": {
+		"_postman_id": "92ada2d8-65d9-4f3d-b01d-71221e99c672",
+		"name": "Asp-Net-Core-Web-Api",
+		"description": "ASP.NET Core Web Api (.net6)\n\n[https://github.com/kahmingt/ASP.NET-Core-Web-API](https://github.com/kahmingt/ASP.NET-Core-Web-API)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25677341",
+		"_collection_link": "https://restless-comet-504007.postman.co/workspace/8fa358a4-38f2-40d3-b6b6-399ff215d9fc/collection/25677341-92ada2d8-65d9-4f3d-b01d-71221e99c672?action=share&source=collection_link&creator=25677341"
+	},
+	"item": [
+		{
+			"name": "AccountLogin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test\r",
+							"\r",
+							"pm.test(\"Response status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has a valid Content-Type header\", function() {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an object\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response having valid schema\", function() {\r",
+							"    const schema = {\r",
+							"        \"type\": \"object\",\r",
+							"        \"properties\": {\r",
+							"            \"token\": { type: \"string\" },\r",
+							"            \"expiration\": { type: \"string\" }\r",
+							"        },\r",
+							"        \"required\": [\r",
+							"            \"token\",\r",
+							"            \"expiration\"\r",
+							"        ]\r",
+							"    }\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response body having valid expiration datetime\", function () {\r",
+							"    const now = Date.now();\r",
+							"    const tokenExpiry = Date.parse(pm.response.json().expiration);\r",
+							"    pm.expect(tokenExpiry).to.be.above(now);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"// Set global environment\r",
+							"const _jwtToken = pm.response.json().token;\r",
+							"pm.environment.set(\"JWT_Token\", _jwtToken);\r",
+							"\r",
+							"pm.test(\"Successfully set global variable \\\"JWT_Token\\\"\", function() {\r",
+							"    pm.expect(pm.variables.get(\"JWT_Token\")).to.be.eql(_jwtToken);\r",
+							"});\r",
+							"\r",
+							" "
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Set for Runner\r",
+							"pm.collectionVariables.set(\"Login\", data.Login);\r",
+							"pm.collectionVariables.set(\"Password\", data.Password);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Login\": \"{{Login}}\",\r\n    \"Password\": \"{{Password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:51199/api/account/login",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "51199",
+					"path": [
+						"api",
+						"account",
+						"login"
+					]
+				},
+				"description": "Account login"
+			},
+			"response": []
+		},
+		{
+			"name": "GetProductList",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:51199/api/product?MinUnitsInStock&MaxUnitsInStock&MinUnitPrice&MaxUnitPrice=10&FilterBy&OrderBy",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "51199",
+					"path": [
+						"api",
+						"product"
+					],
+					"query": [
+						{
+							"key": "MinUnitsInStock",
+							"value": null
+						},
+						{
+							"key": "MaxUnitsInStock",
+							"value": null
+						},
+						{
+							"key": "MinUnitPrice",
+							"value": null
+						},
+						{
+							"key": "MaxUnitPrice",
+							"value": "10"
+						},
+						{
+							"key": "PageSize",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "PageNumber",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "FilterBy",
+							"value": null
+						},
+						{
+							"key": "OrderBy",
+							"value": null
+						}
+					]
+				},
+				"description": "Get Product list"
+			},
+			"response": []
+		},
+		{
+			"name": "GetProductDetailsById",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test\r",
+							"\r",
+							"pm.test(\"Response status code 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has a valid Content-Type header\", function() {\r",
+							"    pm.response.to.have.header(\"Content-Type\");\r",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an object\", function () {\r",
+							"    pm.expect(pm.response.json()).to.be.an('object');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response having valid schema\", function() {\r",
+							"    const schema = {\r",
+							"        \"type\": \"object\",\r",
+							"        \"properties\": {\r",
+							"            \"categoryName\": { type: \"string\", nullable: true },\r",
+							"            \"productID\": { type: \"integer\" } ,\r",
+							"            \"productName\": { type: \"string\", nullable: true },\r",
+							"            \"supplierName\": { type: \"string\", nullable: true },\r",
+							"            \"unitsInStock\": { type: \"integer\" },\r",
+							"            \"unitPrice\": { type: \"number\" }\r",
+							"        }\r",
+							"    }\r",
+							"    pm.response.to.have.jsonSchema(schema);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Set for Runner\r",
+							"pm.collectionVariables.set(\"ProductId\", data.ProductId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:51199/api/product/{{ProductId}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "51199",
+					"path": [
+						"api",
+						"product",
+						"{{ProductId}}"
+					]
+				},
+				"description": "Get Product details by Id"
+			},
+			"response": []
+		},
+		{
+			"name": "CreateProductDetails",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"categoryID\": 1,\r\n    \"productName\": \"Nescafé\",\r\n    \"supplierID\": 1,\r\n    \"unitsInStock\": 100,\r\n    \"unitPrice\": 20.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:51199/api/product",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "51199",
+					"path": [
+						"api",
+						"product"
+					]
+				},
+				"description": "Create Product details by Id"
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateProductDetailsById",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Set for Runner\r",
+							"pm.collectionVariables.set(\"ProductId\", data.ProductId);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"categoryID\": 1,\r\n    \"productName\": \"Chai\",\r\n    \"supplierID\": 1,\r\n    \"unitsInStock\": 23,\r\n    \"unitPrice\": 18.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:51199/api/product/{{ProductId}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "51199",
+					"path": [
+						"api",
+						"product",
+						"{{ProductId}}"
+					]
+				},
+				"description": "Update Product details by Id"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteProductDetailsById",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:51199/api/product/{{globalProductId}}",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "51199",
+					"path": [
+						"api",
+						"product",
+						"{{globalProductId}}"
+					]
+				},
+				"description": "Delete Product details by Id"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Login",
+			"value": ""
+		},
+		{
+			"key": "Password",
+			"value": ""
+		},
+		{
+			"key": "ProductId",
+			"value": ""
+		}
+	]
+}

@@ -8,6 +8,8 @@ services:
     build:
       context: .
       dockerfile: Source/WebApi/Dockerfile
+    env_file:
+      - .env
     environment:
         - DOTNET_USE_POLLING_FILE_WATCHER=1
         - ENABLE_CORS=true
@@ -17,16 +19,25 @@ services:
         - ${USERPROFILE}\vsdbg\vs2017u5:/remote_debugger:rw
         - C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Sdks\Microsoft.Docker.Sdk\tools\TokenService.Proxy\linux-x64\net6.0:/TokenService.Proxy:ro
         - ${USERPROFILE}\.nuget\packages\:/root/.nuget/fallbackpackages
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:51199"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+    depends_on:
+      - mssql
 
   mssql:
     container_name: mssql
     image: mcr.microsoft.com/mssql/server:2022-latest
-    volumes:
-      - sqlvolume:/var/opt/mssql
+    env_file:
+      - .env
     environment:
       - "ACCEPT_EULA=Y"
       - "SA_PASSWORD=${MSSQL_SA_PASSWORD}"
       - attach_dbs=[{"dbName":"${MSSQL_DB_NAME}","dbFiles":["${MSSQL_DATA_PATH}\\${MSSQL_DB_NAME}.mdf","${MSSQL_DATA_PATH}\\${MSSQL_DB_NAME}.ldf"]}]
+    volumes:
+      - sqlvolume:/var/opt/mssql
 
 volumes:
     sqlvolume:

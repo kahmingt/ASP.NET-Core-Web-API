@@ -2,7 +2,7 @@
 ## https://marketplace.visualstudio.com/items?itemName=humao.rest-client
 
 ## Setup
-@localhost = localhost:7255
+@localhost = localhost:51199
 
 
 ### Create Product
